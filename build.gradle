@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'  // Agregar el plugin shadow
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // Plataforma de AWS SDK v2
+    implementation platform('software.amazon.awssdk:bom:2.21.20') // Usamos la versión de BOM para manejar dependencias de AWS SDK
+
+    // AWS Lambda Core
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
+
+    // Servicios específicos de AWS SDK v2
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:lambda'
+    implementation 'software.amazon.awssdk:regions'  // Solo esta línea es necesaria
+
+    // Librería JSON para procesar el contenido
+    implementation 'org.json:json:20231013'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Configuración del plugin Shadow para generar el JAR "sombreado"
+shadowJar {
+    archiveBaseName = 'lambda-function'  // Nombre base del archivo JAR
+    archiveVersion = '1.0'  // Versión del archivo JAR
+    archiveClassifier = ''  // Sin clasificador, es el JAR principal
+    mergeServiceFiles()  // Esto asegura que los archivos de servicio se fusionen correctamente
+}
